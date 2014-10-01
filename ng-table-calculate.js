@@ -85,16 +85,10 @@ angular.module('App').directive('gridCalculateCell', function () {
 			if ($scope.formula) {
 				formula = angular.copy($scope.formula);
 				formulaFields = formula.match(/([^\s\+\-\*\/]+)/g);
-			}
 
-			if ($scope.relations) {
-				relationFields = $scope.relations;
-			}
+				$scope.item.__calculate = function (isInit) {
+					if (isInit && $scope.item.value) return;
 
-
-
-			if ($scope.formula) {
-				$scope.item.__calculate = function () {
 					var _formula = angular.copy(formula);
 
 					for (var i = 0; i < formulaFields.length; i++) {
@@ -107,10 +101,12 @@ angular.module('App').directive('gridCalculateCell', function () {
 					$scope.item.value = eval(_formula);
 				};
 
-				$scope.item.__calculate();
+				$scope.item.__calculate(true); // init calculate
 			}
 
-			if (relationFields) {
+			if ($scope.relations) {
+				relationFields = $scope.relations;
+
 				$scope.$watch('item.value', function (n, o) {
 					if (n && n != o) {
 
