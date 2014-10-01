@@ -20,7 +20,13 @@
             </thead>
             <tbody>
                 <tr ng-repeat="row in model.items">
-                    <td ng-repeat="cell in row track by $index" ng-class="{ disabled : model.columnDefs[$index].disabled }">
+                    <td ng-repeat="cell in row track by $index"
+                        ng-class="{ disabled : model.columnDefs[$index].disabled }"
+                    >
+                        <!-- If Formula exist add Calculate Directive -->
+                        <span ng-if="model.columnDefs[$index].calculate" grid-calculate-cell item="cell" items="row" formula="{{ model.columnDefs[$index].calculate }}"></span>
+                        <!-- /If Formula exist add Calculate Directive -->
+
                         <input ng-if="!model.columnDefs[$index].disabled" ng-model="cell.value" />
                         <span ng-if="model.columnDefs[$index].disabled">{{ cell.value }}</span>
                     </td>

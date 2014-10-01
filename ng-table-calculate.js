@@ -58,10 +58,15 @@ angular.module('App').directive('gridCalculateCell', function () {
 
 	return {
 		restrict: 'A',
+		scope: {
+			item: '=',
+			items: '=',
+			formula: '@'
+		},
 
 		link: function($scope, $element, $attrs) {
 
-
+			console.log($scope.item, $scope.items, $scope.formula);
 
 		}
 	}
