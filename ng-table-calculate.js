@@ -93,18 +93,22 @@ angular.module('App').directive('gridCalculateCell', function () {
 
 
 
-			$scope.item.__calculate = function () {
-				var _formula = angular.copy(formula);
+			if ($scope.formula) {
+				$scope.item.__calculate = function () {
+					var _formula = angular.copy(formula);
 
-				for (var i = 0; i < formulaFields.length; i++) {
-					var field = formulaFields[i],
-						value = $scope.items._entity[field].value;
+					for (var i = 0; i < formulaFields.length; i++) {
+						var field = formulaFields[i],
+							value = $scope.items._entity[field].value;
 
-					_formula = _formula.replace(field, value || 0);
-				}
+						_formula = _formula.replace(field, value || 0);
+					}
 
-				$scope.item.value = eval(_formula);
-			};
+					$scope.item.value = eval(_formula);
+				};
+
+				$scope.item.__calculate();
+			}
 
 			if (relationFields) {
 				$scope.$watch('item.value', function (n, o) {
