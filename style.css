@@ -1,0 +1,36 @@
+body {
+    font: 14px/22px "Trebuchet MS", Tahoma, sans-serif;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+th, td {
+    height: 30px;
+    border: 1px solid #aaa;
+    padding: 0;
+}
+
+th {
+    padding: 0 10px;
+}
+
+td input {
+    height: 22px;
+    line-height: 22px;
+    border: 0;
+    margin: 0;
+    padding: 4px 10px;
+
+    font-size: 14px;
+}
+
+td span {
+    padding: 0 10px;
+}
+
+td.disabled {
+    background: #eee;
+}
