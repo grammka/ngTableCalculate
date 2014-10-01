@@ -5,15 +5,15 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 
 	$scope.model = {
 
-		columnDefs: [
-			{ id: 'id',              disabled: true                                                                      },
-			{ id: 'name',            title: 'Название',      disabled: true                                              },
-			{ id: 'pricePerItem',    title: 'Цена за шт.'                                                                },
-			{ id: 'itemsCnt',        title: 'Кол-во'                                                                     },
-			{ id: 'totalPrice',      title: 'Цена',          calculate: 'pricePerItem * itemsCnt',   disabled: true      },
-			{ id: 'testA',           title: 'A',             calculate: 'testC - testB'                                  },
-			{ id: 'testB',           title: 'B',             calculate: 'testC - testA'                                  },
-			{ id: 'testC',           title: 'C',             calculate: 'testA + testB'                                  }
+		columnsDefs: [
+			{ id: 'id',              title: '',                disabled: true                                                                               },
+			{ id: 'name',            title: 'Название',        disabled: true                                                                               },
+			{ id: 'pricePerItem',    title: 'Цена за шт.',     disabled: false,                                             __relations: ['totalPrice']     },
+			{ id: 'itemsCnt',        title: 'Кол-во',          disabled: false,                                             __relations: ['totalPrice']     },
+			{ id: 'totalPrice',      title: 'Цена',            disabled: true,     __formula: 'pricePerItem * itemsCnt'                                     },
+			{ id: 'testA',           title: 'A',               disabled: false,    __formula: 'testC - testB',              __relations: ['testC']          },
+			{ id: 'testB',           title: 'B',               disabled: false,    __formula: 'testC - testA',              __relations: ['testC']          },
+			{ id: 'testC',           title: 'C',               disabled: false,    __formula: 'testA + testB',              __relations: ['testA']          }
 		],
 
 		items: [
@@ -51,6 +51,19 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 
 	};
 
+
+	for (var i = 0; i < $scope.model.items.length; i++) {
+		var row = $scope.model.items[i];
+
+		row._entity = {};
+
+		for (var j = 0; j < row.length; j++) {
+			var cell = row[j];
+
+			row._entity[$scope.model.columnsDefs[j].id] = cell;
+		}
+	}
+
 });
 
 
@@ -61,12 +74,52 @@ angular.module('App').directive('gridCalculateCell', function () {
 		scope: {
 			item: '=',
 			items: '=',
-			formula: '@'
+			formula: '=',
+			relations: '='
 		},
 
-		link: function($scope, $element, $attrs) {
+		controller: function($scope) {
 
-			console.log($scope.item, $scope.items, $scope.formula);
+			var formula, formulaFields, relationFields;
+
+			if ($scope.formula) {
+				formula = angular.copy($scope.formula);
+				formulaFields = formula.match(/([^\s\+\-\*\/]+)/g);
+			}
+
+			if ($scope.relations) {
+				relationFields = $scope.relations;
+			}
+
+
+
+			$scope.item.__calculate = function () {
+				var _formula = angular.copy(formula);
+
+				for (var i = 0; i < formulaFields.length; i++) {
+					var field = formulaFields[i],
+						value = $scope.items._entity[field].value;
+
+					_formula = _formula.replace(field, value || 0);
+				}
+
+				$scope.item.value = eval(_formula);
+			};
+
+			if (relationFields) {
+				$scope.$watch('item.value', function (n, o) {
+					if (n && n != o) {
+
+						// calculate relation fields
+						for (var i = 0; i < relationFields.length; i++) {
+							var cellId = relationFields[i],
+								cell = $scope.items._entity[cellId];
+
+							cell.__calculate();
+						}
+					}
+				});
+			}
 
 		}
 	}

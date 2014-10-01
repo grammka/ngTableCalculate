@@ -16,19 +16,26 @@
         <table>
             <thead>
             <tr></tr>
-                <th ng-repeat="item in model.columnDefs">{{ item.title }}</th>
+                <th ng-repeat="item in model.columnsDefs">{{ item.title }}</th>
             </thead>
             <tbody>
                 <tr ng-repeat="row in model.items">
                     <td ng-repeat="cell in row track by $index"
-                        ng-class="{ disabled : model.columnDefs[$index].disabled }"
+                        ng-class="{ disabled : model.columnsDefs[$index].disabled }"
                     >
-                        <!-- If Formula exist add Calculate Directive -->
-                        <span ng-if="model.columnDefs[$index].calculate" grid-calculate-cell item="cell" items="row" formula="{{ model.columnDefs[$index].calculate }}"></span>
+                        <!-- If Formula or Relations exist add Calculate Directive -->
+                        <i
+                            ng-if="model.columnsDefs[$index].__formula || model.columnsDefs[$index].__relations"
+                            grid-calculate-cell
+                            item="cell"
+                            items="row"
+                            formula="model.columnsDefs[$index].__formula"
+                            relations="model.columnsDefs[$index].__relations"
+                        ></i>
                         <!-- /If Formula exist add Calculate Directive -->
 
-                        <input ng-if="!model.columnDefs[$index].disabled" ng-model="cell.value" />
-                        <span ng-if="model.columnDefs[$index].disabled">{{ cell.value }}</span>
+                        <input ng-if="!model.columnsDefs[$index].disabled" ng-model="cell.value" />
+                        <span ng-if="model.columnsDefs[$index].disabled">{{ cell.value }}</span>
                     </td>
                 </tr>
             </tbody>
