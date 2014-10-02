@@ -6,14 +6,14 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 	$scope.model = {
 
 		columnsDefs: [
-			{ id: 'id',              title: '',                disabled: true                                                                               },
-			{ id: 'name',            title: 'Название',        disabled: true                                                                               },
-			{ id: 'pricePerItem',    title: 'Цена за шт.',     disabled: false,                                             __relations: ['totalPrice']     },
-			{ id: 'itemsCnt',        title: 'Кол-во',          disabled: false,                                             __relations: ['totalPrice']     },
-			{ id: 'totalPrice',      title: 'Цена',            disabled: true,     __formula: 'pricePerItem * itemsCnt'                                     },
-			{ id: 'testA',           title: 'A',               disabled: false,    __formula: 'testC - testB',              __relations: ['testC']          },
-			{ id: 'testB',           title: 'B',               disabled: false,    __formula: 'testC - testA',              __relations: ['testC']          },
-			{ id: 'testC',           title: 'C',               disabled: false,    __formula: 'testA + testB',              __relations: ['testA']          }
+			{ id: 'id',              title: '',                disabled: true                                                                                           },
+			{ id: 'name',            title: 'Название',        disabled: true                                                                                           },
+			{ id: 'pricePerItem',    title: 'Цена за шт.',     disabled: false,                                                         __relations: ['totalPrice']     },
+			{ id: 'itemsCnt',        title: 'Кол-во',          disabled: false,                                                         __relations: ['totalPrice']     },
+			{ id: 'totalPrice',      title: 'Цена',            disabled: true,     __formula: 'Math.ceil(#pricePerItem# * #itemsCnt#)'                                  },
+			{ id: 'testA',           title: 'A',               disabled: false,    __formula: '#testC# - #testB#',                      __relations: ['testC']          },
+			{ id: 'testB',           title: 'B',               disabled: false,    __formula: '#testC# - #testA#',                      __relations: ['testC']          },
+			{ id: 'testC',           title: 'C',               disabled: false,    __formula: '#testA# + #testB#',                      __relations: ['testA']          }
 		],
 
 		items: [
@@ -84,7 +84,7 @@ angular.module('App').directive('gridCalculateCell', function () {
 
 			if ($scope.formula) {
 				formula = angular.copy($scope.formula);
-				formulaFields = formula.match(/([^\s\+\-\*\/]+)/g);
+				formulaFields = formula.match(/(#[^\s\+\-\*\/]+#)/g);
 
 				$scope.item.__calculate = function (isInit) {
 					if (isInit && $scope.item.value) return;
@@ -93,7 +93,8 @@ angular.module('App').directive('gridCalculateCell', function () {
 
 					for (var i = 0; i < formulaFields.length; i++) {
 						var field = formulaFields[i],
-							value = $scope.items._entity[field].value;
+							cellId = field.replace(/#/g, ''),
+							value = $scope.items._entity[cellId].value;
 
 						_formula = _formula.replace(field, value || 0);
 					}
