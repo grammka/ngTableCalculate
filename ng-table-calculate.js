@@ -6,20 +6,20 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 	$scope.model = {
 
 		columnsDefs: [
-			{ id: 'id',              title: '',                disabled: true                                                                                           },
-			{ id: 'name',            title: 'Название',        disabled: true                                                                                           },
-			{ id: 'pricePerItem',    title: 'Цена за шт.',     disabled: false,                                                         __relations: ['totalPrice']     },
-			{ id: 'itemsCnt',        title: 'Кол-во',          disabled: false,                                                         __relations: ['totalPrice']     },
-			{ id: 'totalPrice',      title: 'Цена',            disabled: true,     __formula: 'Math.ceil(#pricePerItem# * #itemsCnt#)'                                  },
-			{ id: 'testA',           title: 'A',               disabled: false,    __formula: '#testC# - #testB#',                      __relations: ['testC']          },
-			{ id: 'testB',           title: 'B',               disabled: false,    __formula: '#testC# - #testA#',                      __relations: ['testC']          },
-			{ id: 'testC',           title: 'C',               disabled: false,    __formula: '#testA# + #testB#',                      __relations: ['testA']          }
+			{ id: 'id',              title: '',                 disabled: true                                                                                           },
+			{ id: 'name',            title: 'Name',             disabled: true                                                                                           },
+			{ id: 'pricePerItem',    title: 'Price per item',   disabled: false,                                                         __relations: ['totalPrice']     },
+			{ id: 'itemsCnt',        title: 'Count',            disabled: false,                                                         __relations: ['totalPrice']     },
+			{ id: 'totalPrice',      title: 'Total price',      disabled: true,     __formula: 'Math.ceil(#pricePerItem# * #itemsCnt#)'                                  },
+			{ id: 'testA',           title: 'A',                disabled: false,    __formula: '#testC# - #testB#',                      __relations: ['testC']          },
+			{ id: 'testB',           title: 'B',                disabled: false,    __formula: '#testC# - #testA#',                      __relations: ['testC']          },
+			{ id: 'testC',           title: 'C',                disabled: false,    __formula: '#testA# + #testB#',                      __relations: ['testA']          }
 		],
 
 		items: [
 			[
 				{ value: 1 },
-				{ value: 'Киянки' },
+				{ value: 'Axes' },
 				{ value: 100 },
 				{ value: 14 },
 				{ value: null },
@@ -29,7 +29,7 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 			],
 			[
 				{ value: 2 },
-				{ value: 'Топоры' },
+				{ value: 'Bows' },
 				{ value: 200 },
 				{ value: 10 },
 				{ value: null },
@@ -39,7 +39,7 @@ angular.module('App').controller('TableCtrl', function ($scope) {
 			],
 			[
 				{ value: 3 },
-				{ value: 'Арбалеты' },
+				{ value: 'Swords' },
 				{ value: 500 },
 				{ value: 4 },
 				{ value: null },
